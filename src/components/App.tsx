@@ -14,7 +14,7 @@ interface AppProps {
 // }
 
 class _App extends React.Component<AppProps /*AppState*/> {
-  state = { fetching: false };
+  state = { fetching: false, showTopics: false };
 
   componentDidUpdate(prevProps: AppProps): void {
     if (!prevProps.todos.length && this.props.todos.length) {
@@ -27,6 +27,13 @@ class _App extends React.Component<AppProps /*AppState*/> {
     this.setState({ fetching: true });
   };
 
+  //must connect this to the incoming data from fetch- since not just
+  //hiding components, but hiding an axios callback of data
+  toggleDataHandler = () => {
+    const doesShow = this.state.showTopics;
+    this.setState({ showTopics: !doesShow });
+  };
+
   renderList(): JSX.Element[] {
     return this.props.todos.map((todos: Todo) => {
       return <div key={todos.id}>{todos.title}</div>;
@@ -36,9 +43,14 @@ class _App extends React.Component<AppProps /*AppState*/> {
   render() {
     return (
       <div>
-        <button onClick={this.onButtonClick}>Fetch</button>
-        {this.state.fetching ? 'LOADING' : null}
-        {this.renderList()}
+        <div>
+          <button onClick={this.onButtonClick}>Fetch</button>
+          {this.state.fetching ? 'LOADING' : null}
+          {this.renderList()}
+        </div>
+        <div>
+          <button onClick={this.toggleDataHandler}>Hide Data</button>
+        </div>
       </div>
     );
   }
